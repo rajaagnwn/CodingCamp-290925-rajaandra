@@ -3,4 +3,21 @@ body {
     justify-items: center;
     align-content: center;
     height: 100vh;
+    font-family: Arial, sans-serif;
+
+}
+
+.button {
+    background-color: red;
+    border-radius: 8px;
+    color: white;
+    padding: 8px;
+   
+}
+
+.button2 {
+    background-color: green;
+    border-radius: 8px;
+    color: white;
+    padding: 8px;
 }
