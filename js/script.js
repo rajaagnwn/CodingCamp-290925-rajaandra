@@ -1,4 +1,4 @@
-console.log("Hello world!");
+
 
 let todos = [];
 
@@ -6,48 +6,77 @@ function addTodo() {
     const todoText = document.getElementById('todo-input').value;
     const todoDate = document.getElementById('todo-date').value;
     if (!validateInput(todoText, todoDate)) return;
-    // Tambah todo ke array menggunakan nilai string langsung
-    const todo = {
-        task: todoText,
-        date: todoDate
-    };
+
+    const todo = { task: todoText, date: todoDate };
     todos.push(todo);
 
-    alert("To Do added: " + todoText + " " + todoDate);
-    console.log(todos);
-
-    // update tampilan (panggil fungsi render jika ada)
-    if (typeof renderTodos === 'function') renderTodos();
-
-    // reset form jika diinginkan
-    const form = document.getElementById('todo-form');
-    if (form) form.reset();
+    renderTodos();
+    document.getElementById('todo-form').reset();
 }
 
-function renderTodos() {
+function renderTodos(list = todos) {
     const todoList = document.getElementById('todo-list');
+    const emptyMsg = document.getElementById('empty-msg');
     todoList.innerHTML = '';
 
-    todos.forEach((todo, index) => {
-        todoList.innerHTML += `<li class="border p-2 mb-2 flex justify-between items-center">
-            <span><strong>${todo.task}</strong> <small class="text-sm text-gray-500">${todo.date}</small></span>
-            <button type="button" class="remove-btn text-red-500">Remove</button>
-        </li>`;
+    if (list.length === 0) {
+        emptyMsg.style.display = 'block';
+    } else {
+        emptyMsg.style.display = 'none';
+    }
+
+    list.forEach((todo, index) => {
+        todoList.innerHTML += `
+            <li class="border p-2 mb-2 flex justify-between items-center rounded">
+                <span>
+                  <strong>${todo.task}</strong> 
+                  <small class="text-sm text-gray-500">${todo.date}</small>
+                </span>
+                <button type="button" class="remove-btn text-red-500" onclick="removeTodo(${index})">Remove</button>
+            </li>`;
     });
 }
 
-function deleteAllTodo() {
-
+function removeTodo(index) {
+    todos.splice(index, 1);
+    renderTodos();
 }
 
-function filterTodo() {
-
-}
-
-function validateInput(todo, date) {
-    if (todo === "" || date === "") {
-        alert("Please fill in both fields.");
-        return false;
+// Delete All
+function deleteAllTodos() {
+    if (confirm("Are you sure you want to delete all todos?")) {
+        todos = [];
+        renderTodos();
     }
-    return true;
 }
+
+//  Filter Todos (by date)
+function filterTodos() {
+    const filterDate = document.getElementById('filter-date').value;
+
+    if (filterDate === "") {
+        renderTodos(); // tampilkan semua
+        return;
+    }
+
+    const filtered = todos.filter(todo => todo.date === filterDate);
+    renderTodos(filtered);
+}
+
+  function validateInput(text, date) {
+  if (!text && !date) {
+    alert("Task dan Date tidak boleh kosong!");
+    return false;
+  }
+  if (!text) {
+    alert("Task tidak boleh kosong!");
+    return false;
+  }
+  if (!date) {
+    alert("Date tidak boleh kosong!");
+    return false;
+  }
+  return true;
+}
+
+
