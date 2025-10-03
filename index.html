@@ -27,9 +27,9 @@
 <!-- form Todo -->
     <section class="mt-[8px]">
         <form id="todo-form">
-            <input type="text" class="border rounded p-[8px]" id="todo-input" placeholder="Enter Your Task" required>
+            <input type="text" class="border rounded p-[8px]" id="todo-input" placeholder="Enter Your Task..." required>
             <input type="date" class="border rounded p-[8px]"id="todo-date" required>
-            <button type="submit" class="bg-blue-600 rounded p-[8px] text-white">Add Task</button>
+            <button type="button" onclick="addTodo()" class="bg-blue-600 rounded p-[8px] text-white">Add Task</button>
         </form>
     </section>
 
@@ -42,7 +42,8 @@
 
 <!-- list Todo -->
     <section>
-        <p class="text-center text-gray-500">No todos yet. Add one above!</p>
+    <p id="empty-msg" class="text-center text-gray-500">No todos yet. Add one above!</p>
+    <ul id="todo-list" class="mt-4"></ul>
     </section>
 </main>
 
