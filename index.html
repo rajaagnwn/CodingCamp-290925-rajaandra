@@ -1,63 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To do raja</title>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css\style.css">
-    
-    <!-- Tailwind -->
- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raja Todo List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">Raja To do List</h1>
 
+    <!-- Form Add Todo -->
+    <form id="todo-form" class="flex flex-col gap-2">
+      <input 
+        type="text" 
+        id="todo-input" 
+        placeholder="Masukkan todo list..." 
+        class="border rounded p-2" 
+        required
+      >
+      <input 
+        type="date" 
+        id="todo-date" 
+        class="border rounded p-2" 
+        required
+      >
+      <button 
+        type="submit" 
+        class="bg-blue-600 text-white rounded p-2 hover:bg-blue-700">
+        Add Task
+      </button>
+    </form>
 
-<body>
-    
-<!-- Header -->
-<header>
-    <h1 class="text-3xl font-bold">Raja To Do List</h1>
-</header>
+    <!-- Buttons -->
+    <section class="mt-4 flex gap-2">
+      <button 
+        type="button" 
+        onclick="deleteAllTodos()" 
+        class="bg-red-600 text-white rounded p-2 hover:bg-red-700 w-full">
+        Delete All
+      </button>
 
-
-<!-- main content -->
-<main>
-
-<!-- form Todo -->
-    <section class="mt-[8px]">
-        <form id="todo-form">
-            <input type="text" class="border rounded p-[8px]" id="todo-input" placeholder="Enter Your Task..." required>
-            <input type="date" class="border rounded p-[8px]"id="todo-date" required>
-            <button type="button" onclick="addTodo()" class="bg-blue-600 rounded p-[8px] text-white">Add Task</button>
-        </form>
+      <button  
+        type="button" 
+        onclick="filterTodos()" 
+        class="bg-green-600 text-white rounded p-2 hover:bg-green-700 w-full">
+        Filter
+      </button>
     </section>
 
-    <!-- action button -->
-    <section class="mt-[8px] flex gap-2">
-<button class="bg-red-600 rounded text-white p-[8px]">Delete All</button>
-<button  class="bg-green-600 rounded text-white p-[8px]" >Filter</button>
+    <!-- Todo List -->
+    <ul id="todo-list" class="mt-4 border rounded p-2">
+      <li class="text-gray-400 text-center">No todos yet. Add one above!</li>
+    </ul>
+  </div>
 
-    </section>
+  <script>
+    const form = document.getElementById("todo-form");
+    const todoInput = document.getElementById("todo-input");
+    const todoDate = document.getElementById("todo-date");
+    const todoList = document.getElementById("todo-list");
 
-<!-- list Todo -->
-    <section>
-    <p id="empty-msg" class="text-center text-gray-500">No todos yet. Add one above!</p>
-    <ul id="todo-list" class="mt-4"></ul>
-    </section>
-</main>
+    let todos = [];
 
+    // Render Todos
+    function renderTodos(list = todos) {
+      todoList.innerHTML = "";
 
-<!-- footer -->
-<footer>
+      if (list.length === 0) {
+        todoList.innerHTML = `<li class="text-gray-400 text-center">No todos yet. Add one above!</li>`;
+        return;
+      }
 
-    <p>Copyright &copy; 2025 rajaandra</p>
-</footer>
+      list.forEach((todo, index) => {
+        const li = document.createElement("li");
+        li.className = "flex justify-between items-center border-b py-2";
 
+        li.innerHTML = `
+          <span>${todo.text} - <small>${todo.date}</small></span>
+          <button onclick="deleteTodo(${index})" class="bg-red-500 text-white px-2 py-1 rounded">
+            X
+          </button>
+        `;
+        todoList.appendChild(li);
+      });
+    }
 
-    <!-- javascript -->
-<script src="js\script.js"></script>
+    // Add Todo
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      const date = todoDate.value;
+
+      if (text && date) {
+        todos.push({ text, date });
+        renderTodos();
+        form.reset();
+      }
+    });
+
+    // Delete Single Todo
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      renderTodos();
+    }
+
+    // Delete All
+    function deleteAllTodos() {
+      todos = [];
+      renderTodos();
+    }
+
+    // Filter Todos pakai date input yang sama
+    function filterTodos() {
+      const filterDate = todoDate.value;
+
+      if (!filterDate) {
+        renderTodos();
+        return;
+      }
+
+      const filtered = todos.filter(todo => todo.date === filterDate);
+      renderTodos(filtered);
+    }
+  </script>
 </body>
-
-
 </html>
